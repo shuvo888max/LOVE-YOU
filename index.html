@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Neon Brick Breaker Deluxe</title>
+    <title>Fruit Ninja - Deluxe Edition</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: none; /* Prevents scrolling while dragging finger */
+            touch-action: none; /* Prevents touch scrolling while slicing */
+            user-select: none;
         }
         body {
-            background: #090A0F;
+            background: #110e19;
             color: #FFF;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             display: flex;
@@ -30,9 +31,9 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            padding: 10px 15px;
+            padding: 10px 20px;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+            border-radius: 12px;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
@@ -51,35 +52,36 @@
         canvas {
             width: 100%;
             height: 100%;
-            border: 3px solid #00F0FF;
-            background: radial-gradient(circle, #151828 0%, #080911 100%);
-            box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
-            border-radius: 8px;
+            border: 3px solid #FF9900;
+            background: radial-gradient(circle, #2c1b30 0%, #0d0a12 100%);
+            box-shadow: 0 0 30px rgba(255, 153, 0, 0.3);
+            border-radius: 12px;
             display: block;
+            cursor: crosshair;
         }
-        /* Popup Overlay */
+        /* Popup Screen */
         #startScreen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(9, 10, 15, 0.92);
+            background: rgba(13, 10, 18, 0.92);
             backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 8px;
+            border-radius: 12px;
             z-index: 10;
             padding: 20px;
             text-align: center;
         }
         .pop-title {
-            font-size: clamp(1.8rem, 6vw, 2.8rem);
+            font-size: clamp(2rem, 7vw, 3.2rem);
             font-weight: 800;
-            color: #00F0FF;
-            text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+            color: #FF9900;
+            text-shadow: 0 0 20px rgba(255, 153, 0, 0.8);
             margin-bottom: 15px;
         }
         .pop-credit {
@@ -89,11 +91,10 @@
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
             margin-bottom: 25px;
             line-height: 1.5;
-            padding: 0 10px;
         }
         .start-btn {
-            padding: 12px 30px;
-            font-size: clamp(1rem, 4vw, 1.2rem);
+            padding: 12px 35px;
+            font-size: clamp(1rem, 4vw, 1.3rem);
             font-weight: bold;
             color: #090A0F;
             background: #00FF66;
@@ -107,7 +108,7 @@
             transform: scale(0.95);
         }
         .instructions {
-            margin-top: 12px;
+            margin-top: 10px;
             color: #888;
             font-size: 0.8rem;
             text-transform: uppercase;
@@ -116,10 +117,10 @@
         }
         .dev-footer {
             margin-top: 6px;
-            color: #00F0FF;
+            color: #FF9900;
             font-size: 0.85rem;
             font-weight: 600;
-            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+            text-shadow: 0 0 8px rgba(255, 153, 0, 0.5);
             text-align: center;
         }
     </style>
@@ -127,22 +128,21 @@
 <body>
 
     <div class="ui-container">
-        <div class="stat-box" style="color: #00F0FF;">SCORE: <span id="score">0</span></div>
+        <div class="stat-box" style="color: #FF9900;">SCORE: <span id="score">0</span></div>
         <div class="stat-box" style="color: #FF007F;">LIVES: <span id="lives">3</span></div>
-        <div class="stat-box" style="color: #00FF66;">LEVEL: <span id="level">1</span></div>
     </div>
 
     <div class="game-wrapper">
         <div id="startScreen">
-            <div class="pop-title">BRICK BREAKER DELUXE</div>
+            <div class="pop-title">FRUIT SLICER</div>
             <div class="pop-credit">Game Developed BY Md S H Shuvo<br><span style="font-size: 0.85em; color: #FFF;">Student Department Of SWE , DIU</span></div>
-            <button class="start-btn" onclick="startGame()">START GAME</button>
+            <button class="start-btn" onclick="startGame()">START SLICING</button>
         </div>
 
         <canvas id="gameCanvas" width="800" height="600"></canvas>
     </div>
     
-    <div class="instructions">PC: Move Mouse | Mobile: Drag Finger Anywhere to Move</div>
+    <div class="instructions">Swipe / Drag your mouse or finger to slice fruits!</div>
     <div class="dev-footer">Game Developed BY Md S H Shuvo , Student Department Of SWE , DIU</div>
 
     <script>
@@ -152,225 +152,140 @@
 
         const scoreEl = document.getElementById("score");
         const livesEl = document.getElementById("lives");
-        const levelEl = document.getElementById("level");
 
         let gameRunning = false;
         let score = 0;
         let lives = 3;
-        let level = 1;
+
+        let fruits = [];
         let particles = [];
+        let slicePath = [];
 
-        // Paddle Configuration
-        const paddle = {
-            width: 120,
-            height: 15,
-            x: (canvas.width - 120) / 2,
-            y: canvas.height - 30,
-            color: "#00F0FF",
-            glow: "#00F0FF"
-        };
-
-        // Ball Configuration
-        const ball = {
-            x: canvas.width / 2,
-            y: canvas.height - 50,
-            radius: 8,
-            speed: 6,
-            dx: 4,
-            dy: -4,
-            color: "#FFFFFF",
-            glow: "#FFFFFF"
-        };
-
-        // Bricks Configuration
-        const brickRowCount = 6;
-        const brickColumnCount = 9;
-        const brickPadding = 12;
-        const brickOffsetTop = 50;
-        const brickOffsetLeft = 35;
-        const brickWidth = (canvas.width - (brickOffsetLeft * 2) - (brickPadding * (brickColumnCount - 1))) / brickColumnCount;
-        const brickHeight = 22;
-
-        const rowColors = [
-            { color: "#FF0055", glow: "#FF0055" }, 
-            { color: "#FF5500", glow: "#FF5500" }, 
-            { color: "#FFCC00", glow: "#FFCC00" }, 
-            { color: "#00FF66", glow: "#00FF66" }, 
-            { color: "#00F0FF", glow: "#00F0FF" }, 
-            { color: "#B026FF", glow: "#B026FF" }  
+        // Fruit Definitions
+        const fruitTypes = [
+            { name: 'Watermelon', color: '#2ECC71', innerColor: '#E74C3C', radius: 35 },
+            { name: 'Orange', color: '#E67E22', innerColor: '#F39C12', radius: 28 },
+            { name: 'Apple', color: '#E74C3C', innerColor: '#FFD700', radius: 25 },
+            { name: 'Lemon', color: '#F1C40F', innerColor: '#FFF', radius: 22 },
+            { name: 'Plum', color: '#8E44AD', innerColor: '#9B59B6', radius: 20 }
         ];
 
-        let bricks = [];
-        function initBricks() {
-            bricks = [];
-            for (let c = 0; c < brickColumnCount; c++) {
-                bricks[c] = [];
-                for (let r = 0; r < brickRowCount; r++) {
-                    bricks[c][r] = { x: 0, y: 0, status: 1, color: rowColors[r].color, glow: rowColors[r].glow };
-                }
-            }
-        }
-        initBricks();
-
-        // Helper to translate touch or mouse X position accurately to canvas size
-        function updatePaddlePosition(clientX) {
+        // Track user blade swipe trail
+        function addSlicePoint(x, y) {
             const rect = canvas.getBoundingClientRect();
             const scaleX = canvas.width / rect.width;
-            const relativeX = (clientX - rect.left) * scaleX;
-            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, relativeX - paddle.width / 2));
+            const scaleY = canvas.height / rect.height;
+            const canvasX = (x - rect.left) * scaleX;
+            const canvasY = (y - rect.top) * scaleY;
+
+            slicePath.push({ x: canvasX, y: canvasY, time: Date.now() });
+            checkSlices(canvasX, canvasY);
         }
 
-        // PC Mouse Movement
-        document.addEventListener("mousemove", (e) => {
-            if (!gameRunning) return;
-            updatePaddlePosition(e.clientX);
-        });
+        // Event Listeners for PC & Mobile
+        let isMouseDown = false;
+        window.addEventListener("mousedown", (e) => { isMouseDown = true; addSlicePoint(e.clientX, e.clientY); });
+        window.addEventListener("mouseup", () => { isMouseDown = false; });
+        window.addEventListener("mousemove", (e) => { if (isMouseDown && gameRunning) addSlicePoint(e.clientX, e.clientY); });
 
-        // Mobile Touch Move (Swipe / Drag)
-        window.addEventListener("touchmove", (e) => {
-            if (!gameRunning) return;
-            if (e.touches.length > 0) {
-                updatePaddlePosition(e.touches[0].clientX);
-            }
-        }, { passive: true });
-
-        // Mobile Touch Start (Instant move to finger placement)
         window.addEventListener("touchstart", (e) => {
             if (!gameRunning) return;
-            if (e.touches.length > 0) {
-                updatePaddlePosition(e.touches[0].clientX);
-            }
+            if (e.touches.length > 0) addSlicePoint(e.touches[0].clientX, e.touches[0].clientY);
+        }, { passive: true });
+
+        window.addEventListener("touchmove", (e) => {
+            if (!gameRunning) return;
+            if (e.touches.length > 0) addSlicePoint(e.touches[0].clientX, e.touches[0].clientY);
         }, { passive: true });
 
         function startGame() {
             startScreen.style.display = "none";
             gameRunning = true;
-            resetBallAndPaddle();
+            score = 0;
+            lives = 3;
+            scoreEl.textContent = score;
+            livesEl.textContent = lives;
+            fruits = [];
+            particles = [];
+            slicePath = [];
             draw();
         }
 
-        // Particle Explosions
-        function createParticles(x, y, color) {
-            for (let i = 0; i < 12; i++) {
+        // Spawn Fruit with curved trajectory
+        function spawnFruit() {
+            const type = fruitTypes[Math.floor(Math.random() * fruitTypes.length)];
+            const x = Math.random() * (canvas.width - 200) + 100;
+            
+            fruits.push({
+                x: x,
+                y: canvas.height + type.radius,
+                vx: (canvas.width / 2 - x) * 0.015 + (Math.random() - 0.5) * 2,
+                vy: -(Math.random() * 4 + 13), // Launch force
+                gravity: 0.28,
+                radius: type.radius,
+                color: type.color,
+                innerColor: type.innerColor,
+                sliced: false,
+                halves: []
+            });
+        }
+
+        // Juice explosion effects
+        function createJuiceSplatter(x, y, color) {
+            for (let i = 0; i < 16; i++) {
                 particles.push({
                     x: x,
                     y: y,
-                    dx: (Math.random() - 0.5) * 6,
-                    dy: (Math.random() - 0.5) * 6,
-                    radius: Math.random() * 3 + 1,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    radius: Math.random() * 4 + 2,
                     color: color,
                     alpha: 1,
-                    life: 0.03
+                    life: 0.04
                 });
             }
         }
 
-        function updateParticles() {
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.dx;
-                p.y += p.dy;
-                p.alpha -= p.life;
-                if (p.alpha <= 0) particles.splice(i, 1);
-            }
-        }
+        // Check collision between blade trail and fruits
+        function checkSlices(x, y) {
+            fruits.forEach(fruit => {
+                if (!fruit.sliced) {
+                    const dist = Math.hypot(fruit.x - x, fruit.y - y);
+                    if (dist < fruit.radius) {
+                        fruit.sliced = true;
+                        score += 10;
+                        scoreEl.textContent = score;
+                        createJuiceSplatter(fruit.x, fruit.y, fruit.innerColor);
 
-        function drawParticles() {
-            particles.forEach(p => {
-                ctx.save();
-                ctx.globalAlpha = p.alpha;
-                ctx.fillStyle = p.color;
-                ctx.shadowColor = p.color;
-                ctx.shadowBlur = 8;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.restore();
+                        // Split into two halves
+                        fruit.halves = [
+                            { x: fruit.x - 10, y: fruit.y, vx: -3, vy: -3, angle: -0.2 },
+                            { x: fruit.x + 10, y: fruit.y, vx: 3, vy: -3, angle: 0.2 }
+                        ];
+                    }
+                }
             });
         }
 
-        function drawPaddle() {
+        function drawBladeTrail() {
+            const now = Date.now();
+            slicePath = slicePath.filter(p => now - p.time < 150); // Trail lasts 150ms
+
+            if (slicePath.length < 2) return;
+
             ctx.save();
-            ctx.fillStyle = paddle.color;
-            ctx.shadowColor = paddle.glow;
-            ctx.shadowBlur = 15;
             ctx.beginPath();
-            ctx.roundRect(paddle.x, paddle.y, paddle.width, paddle.height, 8);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        function drawBall() {
-            ctx.save();
-            ctx.fillStyle = ball.color;
-            ctx.shadowColor = ball.glow;
-            ctx.shadowBlur = 15;
-            ctx.beginPath();
-            ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.restore();
-        }
-
-        function drawBricks() {
-            for (let c = 0; c < brickColumnCount; c++) {
-                for (let r = 0; r < brickRowCount; r++) {
-                    const b = bricks[c][r];
-                    if (b.status === 1) {
-                        const brickX = c * (brickWidth + brickPadding) + brickOffsetLeft;
-                        const brickY = r * (brickHeight + brickPadding) + brickOffsetTop;
-                        b.x = brickX;
-                        b.y = brickY;
-
-                        ctx.save();
-                        ctx.fillStyle = b.color;
-                        ctx.shadowColor = b.glow;
-                        ctx.shadowBlur = 10;
-                        ctx.beginPath();
-                        ctx.roundRect(brickX, brickY, brickWidth, brickHeight, 4);
-                        ctx.fill();
-                        ctx.restore();
-                    }
-                }
+            ctx.moveTo(slicePath[0].x, slicePath[0].y);
+            for (let i = 1; i < slicePath.length; i++) {
+                ctx.lineTo(slicePath[i].x, slicePath[i].y);
             }
-        }
-
-        function collisionDetection() {
-            for (let c = 0; c < brickColumnCount; c++) {
-                for (let r = 0; r < brickRowCount; r++) {
-                    const b = bricks[c][r];
-                    if (b.status === 1) {
-                        if (
-                            ball.x > b.x &&
-                            ball.x < b.x + brickWidth &&
-                            ball.y > b.y &&
-                            ball.y < b.y + brickHeight
-                        ) {
-                            ball.dy = -ball.dy;
-                            b.status = 0;
-                            score += 15;
-                            scoreEl.textContent = score;
-
-                            createParticles(b.x + brickWidth / 2, b.y + brickHeight / 2, b.color);
-
-                            if (score === brickRowCount * brickColumnCount * 15 * level) {
-                                level++;
-                                levelEl.textContent = level;
-                                ball.speed += 1;
-                                resetBallAndPaddle();
-                                initBricks();
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        function resetBallAndPaddle() {
-            ball.x = canvas.width / 2;
-            ball.y = canvas.height - 50;
-            ball.dx = ball.speed * (Math.random() > 0.5 ? 1 : -1);
-            ball.dy = -ball.speed;
-            paddle.x = (canvas.width - paddle.width) / 2;
+            ctx.strokeStyle = "#FFF";
+            ctx.lineWidth = 5;
+            ctx.shadowColor = "#00F0FF";
+            ctx.shadowBlur = 12;
+            ctx.lineCap = "round";
+            ctx.stroke();
+            ctx.restore();
         }
 
         function draw() {
@@ -378,49 +293,92 @@
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            drawBricks();
-            drawBall();
-            drawPaddle();
-            drawParticles();
-            
-            collisionDetection();
-            updateParticles();
-
-            // Wall Collisions
-            if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
-                ball.dx = -ball.dx;
+            // Random Fruit Spawner
+            if (Math.random() < 0.025) {
+                spawnFruit();
             }
 
-            // Top Collision
-            if (ball.y + ball.dy < ball.radius) {
-                ball.dy = -ball.dy;
-            } 
-            // Bottom Collision
-            else if (ball.y + ball.dy > canvas.height - ball.radius - 20) {
-                if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
-                    let hitPoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
-                    ball.dx = hitPoint * (ball.speed + 1);
-                    ball.dy = -Math.sqrt(Math.max(1, ball.speed * ball.speed - ball.dx * ball.dx));
-                } else if (ball.y + ball.dy > canvas.height - ball.radius) {
-                    lives--;
-                    livesEl.textContent = lives;
-                    if (lives === 0) {
-                        alert(`GAME OVER!\nFinal Score: ${score}`);
-                        document.location.reload();
-                    } else {
-                        resetBallAndPaddle();
+            // Update & Render Fruits
+            for (let i = fruits.length - 1; i >= 0; i--) {
+                const f = fruits[i];
+                
+                if (!f.sliced) {
+                    f.x += f.vx;
+                    f.y += f.vy;
+                    f.vy += f.gravity;
+
+                    // Draw Whole Fruit
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = f.color;
+                    ctx.shadowColor = f.color;
+                    ctx.shadowBlur = 10;
+                    ctx.fill();
+                    
+                    // Inner glow detail
+                    ctx.beginPath();
+                    ctx.arc(f.x, f.y, f.radius * 0.6, 0, Math.PI * 2);
+                    ctx.fillStyle = f.innerColor;
+                    ctx.fill();
+                    ctx.restore();
+
+                    // Check if fruit fell off bottom screen
+                    if (f.y > canvas.height + 50 && f.vy > 0) {
+                        fruits.splice(i, 1);
+                        lives--;
+                        livesEl.textContent = lives;
+                        if (lives <= 0) {
+                            alert(`GAME OVER!\nFinal Score: ${score}`);
+                            document.location.reload();
+                        }
+                    }
+                } else {
+                    // Draw Sliced Halves
+                    f.halves.forEach(half => {
+                        half.x += half.vx;
+                        half.y += half.vy;
+                        half.vy += f.gravity;
+
+                        ctx.save();
+                        ctx.beginPath();
+                        ctx.arc(half.x, half.y, f.radius * 0.8, 0, Math.PI);
+                        ctx.fillStyle = f.innerColor;
+                        ctx.fill();
+                        ctx.restore();
+                    });
+
+                    // Remove halves once off-screen
+                    if (f.halves[0] && f.halves[0].y > canvas.height + 50) {
+                        fruits.splice(i, 1);
                     }
                 }
             }
 
-            ball.x += ball.dx;
-            ball.y += ball.dy;
+            // Update & Render Particle FX
+            for (let i = particles.length - 1; i >= 0; i--) {
+                const p = particles[i];
+                p.x += p.vx;
+                p.y += p.vy;
+                p.alpha -= p.life;
+
+                if (p.alpha <= 0) {
+                    particles.splice(i, 1);
+                } else {
+                    ctx.save();
+                    ctx.globalAlpha = p.alpha;
+                    ctx.fillStyle = p.color;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            drawBladeTrail();
 
             requestAnimationFrame(draw);
         }
-
-        drawBricks();
-        drawPaddle();
     </script>
 </body>
 </html>
