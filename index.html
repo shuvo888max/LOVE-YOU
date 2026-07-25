@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shuvo's Love Tithi — Forever & Always</title>
-    <!-- Romantic & Elegant Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <title>Shuvo's Love Tithi — A Multicolor Celebration of Us</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -15,7 +14,7 @@
         }
 
         body {
-            background: radial-gradient(circle at center, #2e0821 0%, #12030f 70%, #050004 100%);
+            background: #090312;
             color: #ffffff;
             font-family: 'Poppins', sans-serif;
             min-height: 100vh;
@@ -25,10 +24,29 @@
             justify-content: center;
             overflow-x: hidden;
             position: relative;
-            padding: 30px 15px;
+            padding: 25px 15px;
         }
 
-        /* Particle Canvas Layer */
+        /* Animated Multicolor Gradient Background Glow */
+        .bg-glow {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100vw;
+            height: 100vh;
+            transform: translate(-50%, -50%);
+            background: radial-gradient(circle, rgba(255, 0, 128, 0.25) 0%, rgba(0, 240, 255, 0.15) 35%, rgba(255, 215, 0, 0.15) 65%, transparent 100%);
+            z-index: 0;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
+            pointer-events: none;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: translate(-50%, -50%) scale(0.9) rotate(0deg); filter: hue-rotate(0deg); }
+            100% { transform: translate(-50%, -50%) scale(1.2) rotate(360deg); filter: hue-rotate(360deg); }
+        }
+
+        /* Particle Canvas */
         #magicCanvas {
             position: fixed;
             top: 0;
@@ -39,146 +57,167 @@
             z-index: 1;
         }
 
-        /* Main Container */
+        /* Main Glass Container */
         .glass-card {
             position: relative;
             z-index: 2;
-            max-width: 850px;
+            max-width: 900px;
             width: 100%;
             text-align: center;
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 182, 193, 0.25);
+            background: rgba(18, 10, 32, 0.65);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 2px solid transparent;
+            border-image: linear-gradient(45deg, #ff007f, #00f0ff, #ffcc00, #9b51e0) 1;
             border-radius: 30px;
-            padding: 45px 25px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7),
-                        0 0 40px rgba(255, 105, 180, 0.15);
-            animation: containerGlow 4s infinite alternate ease-in-out;
+            padding: 40px 25px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
+                        0 0 40px rgba(255, 0, 128, 0.3);
         }
 
-        @keyframes containerGlow {
-            0% { box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 30px rgba(255, 105, 180, 0.15); }
-            100% { box-shadow: 0 20px 50px rgba(0,0,0,0.7), 0 0 60px rgba(255, 105, 180, 0.35); }
-        }
-
-        /* Header Styling */
-        .title-pre {
-            font-size: clamp(0.85rem, 2.5vw, 1rem);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: #ffb6c1;
-            margin-bottom: 5px;
-            font-weight: 300;
-        }
-
+        /* Multicolor Animated Title */
         h1.title {
             font-family: 'Great Vibes', cursive;
-            font-size: clamp(3rem, 9vw, 5.5rem);
-            color: #ff77a9;
-            text-shadow: 0 0 20px rgba(255, 119, 169, 0.8),
-                         0 0 40px rgba(255, 192, 203, 0.4);
-            margin-bottom: 10px;
+            font-size: clamp(3.2rem, 10vw, 5.8rem);
+            background: linear-gradient(45deg, #ff0055, #ffcc00, #00f0ff, #00ff66, #ff007f);
+            background-size: 300% 300%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradientText 5s ease infinite;
+            margin-bottom: 5px;
             line-height: 1.1;
+            filter: drop-shadow(0 0 15px rgba(255, 0, 128, 0.5));
+        }
+
+        @keyframes gradientText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .subtitle {
             font-family: 'Playfair Display', serif;
             font-style: italic;
-            font-size: clamp(1rem, 3.2vw, 1.3rem);
+            font-size: clamp(1.1rem, 3.5vw, 1.4rem);
             color: #ffd700;
-            margin-bottom: 25px;
-            letter-spacing: 1px;
-            text-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+            margin-bottom: 30px;
+            text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
         }
 
-        /* Pulse Heart */
-        .heart-icon {
-            font-size: 55px;
+        /* Featured Photo Frame */
+        .photo-wrapper {
+            position: relative;
             display: inline-block;
-            margin: 10px 0 25px;
-            filter: drop-shadow(0 0 15px #ff1493);
-            animation: pulse 1.3s infinite ease-in-out;
+            margin: 10px auto 30px;
+            padding: 10px;
+            border-radius: 25px;
+            background: linear-gradient(135deg, #ff007f, #00f0ff, #ffcc00);
+            background-size: 200% 200%;
+            animation: gradientText 4s ease infinite;
+            box-shadow: 0 15px 35px rgba(255, 0, 127, 0.4);
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.4s ease;
         }
 
-        .heart-icon:active {
-            transform: scale(0.85);
+        .photo-wrapper:hover {
+            transform: scale(1.03) rotate(1deg);
         }
 
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.22); }
+        .photo-frame {
+            width: 100%;
+            max-width: 380px;
+            height: 380px;
+            object-fit: cover;
+            border-radius: 18px;
+            display: block;
+            border: 3px solid #090312;
         }
 
-        /* Key Milestones & Counters Grid */
+        .photo-caption {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
+        }
+
+        /* Key Milestones Grid */
         .timeline-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 20px;
-            margin: 25px 0 35px;
+            margin: 30px 0;
         }
 
         .card {
             background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 182, 193, 0.2);
             border-radius: 20px;
             padding: 22px;
             transition: all 0.4s ease;
             position: relative;
-            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(5px);
+        }
+
+        .card-engagement {
+            border-color: rgba(255, 0, 127, 0.5);
+            box-shadow: inset 0 0 15px rgba(255, 0, 127, 0.2);
+        }
+
+        .card-marriage {
+            border-color: rgba(0, 240, 255, 0.5);
+            box-shadow: inset 0 0 15px rgba(0, 240, 255, 0.2);
         }
 
         .card:hover {
             transform: translateY(-8px);
-            background: rgba(255, 255, 255, 0.09);
-            border-color: #ff77a9;
-            box-shadow: 0 12px 25px rgba(255, 119, 169, 0.25);
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 15px 30px rgba(0, 240, 255, 0.3);
         }
 
         .card-badge {
-            font-size: 0.75rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 2px;
             color: #ffd700;
             margin-bottom: 8px;
-            font-weight: 600;
+            font-weight: 700;
         }
 
         .card-title {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             color: #ffffff;
             font-weight: 600;
             margin-bottom: 6px;
         }
 
         .card-date {
-            font-size: 1rem;
-            color: #ffb6c1;
+            font-size: 1.1rem;
+            color: #ff77a9;
             margin-bottom: 12px;
             font-family: 'Playfair Display', serif;
         }
 
         .live-counter {
-            font-size: 0.85rem;
-            color: #e0e0e0;
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 12px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #00f0ff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 10px 14px;
             border-radius: 12px;
             display: inline-block;
-            letter-spacing: 0.5px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 240, 255, 0.3);
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.6);
         }
 
-        /* Quotes Carousel */
-        .quote-container {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 16px;
+        /* Quotes Section */
+        .quote-box {
+            background: linear-gradient(135deg, rgba(255, 0, 127, 0.15), rgba(0, 240, 255, 0.15));
+            border-radius: 20px;
             padding: 25px;
             margin-bottom: 30px;
-            border: 1px dashed rgba(255, 182, 193, 0.3);
-            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .quote-text {
@@ -187,14 +226,14 @@
             font-size: clamp(1rem, 3.5vw, 1.25rem);
             color: #ffe4e1;
             line-height: 1.6;
-            transition: opacity 0.5s ease-in-out;
             min-height: 70px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: opacity 0.5s ease;
         }
 
-        /* Interactive Action Buttons */
+        /* Buttons Section */
         .action-btns {
             display: flex;
             flex-wrap: wrap;
@@ -204,49 +243,48 @@
         }
 
         .btn {
-            padding: 12px 28px;
+            padding: 14px 30px;
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 700;
             border-radius: 30px;
             border: none;
             cursor: pointer;
             transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
-        .btn-primary {
-            background: linear-gradient(45deg, #ff1493, #ff69b4);
+        .btn-love {
+            background: linear-gradient(45deg, #ff0055, #ff007f);
             color: #fff;
-            box-shadow: 0 0 20px rgba(255, 20, 147, 0.5);
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.6);
         }
 
-        .btn-primary:hover {
-            transform: scale(1.05);
-            box-shadow: 0 0 30px rgba(255, 20, 147, 0.8);
+        .btn-love:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 35px rgba(255, 0, 127, 0.9);
         }
 
-        .btn-secondary {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffd700;
-            border: 1px solid rgba(255, 215, 0, 0.4);
+        .btn-magic {
+            background: linear-gradient(45deg, #00f0ff, #9b51e0);
+            color: #fff;
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
         }
 
-        .btn-secondary:hover {
-            background: rgba(255, 215, 0, 0.2);
-            transform: scale(1.05);
+        .btn-magic:hover {
+            transform: scale(1.06);
+            box-shadow: 0 0 35px rgba(0, 240, 255, 0.8);
         }
 
-        /* Modal Overlay for Secret Letter */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100vw;
             height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(8px);
+            background: rgba(5, 1, 10, 0.88);
+            backdrop-filter: blur(10px);
             z-index: 100;
             display: flex;
             align-items: center;
@@ -263,15 +301,15 @@
         }
 
         .modal-box {
-            background: linear-gradient(135deg, #2a0820 0%, #150010 100%);
-            border: 2px solid #ff77a9;
-            border-radius: 24px;
+            background: linear-gradient(135deg, #1c0620 0%, #0c0214 100%);
+            border: 2px solid #ff007f;
+            border-radius: 25px;
             padding: 35px 25px;
             max-width: 550px;
             width: 100%;
             text-align: center;
-            box-shadow: 0 0 50px rgba(255, 119, 169, 0.5);
-            transform: scale(0.8);
+            box-shadow: 0 0 50px rgba(255, 0, 127, 0.6);
+            transform: scale(0.85);
             transition: transform 0.4s ease;
         }
 
@@ -281,13 +319,13 @@
 
         .modal-title {
             font-family: 'Great Vibes', cursive;
-            font-size: 3rem;
-            color: #ff77a9;
+            font-size: 3.2rem;
+            color: #ff007f;
             margin-bottom: 15px;
         }
 
         .modal-body {
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.7;
             color: #ffe4e1;
             margin-bottom: 25px;
@@ -295,75 +333,74 @@
         }
 
         .close-btn {
-            padding: 10px 25px;
-            background: #ff1493;
-            color: white;
+            padding: 12px 30px;
+            background: linear-gradient(45deg, #ff007f, #ffcc00);
+            color: #000;
             border: none;
-            border-radius: 20px;
+            border-radius: 25px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 700;
         }
 
-        /* Footer */
         .dev-footer {
             margin-top: 15px;
             font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
+            color: rgba(255, 255, 255, 0.7);
             letter-spacing: 1px;
         }
 
         .dev-footer span {
-            color: #ff77a9;
+            color: #00f0ff;
             font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <!-- Particle Background Canvas -->
+    <div class="bg-glow"></div>
     <canvas id="magicCanvas"></canvas>
 
-    <!-- Main Glass Card Container -->
     <div class="glass-card">
-        <div class="title-pre">A Dedicated Love Story</div>
         <h1 class="title">Shuvo's Love Tithi</h1>
-        <p class="subtitle">"Two Souls, One Heart, Infinity & Beyond"</p>
+        <p class="subtitle">"Holding Hands Today, Tomorrow & Forever"</p>
 
-        <div class="heart-icon" onclick="triggerLoveExplosion(event)" title="Click for a Love Surprise!">💖</div>
+        <!-- Uploaded Photo Display -->
+        <div class="photo-wrapper" onclick="triggerFireworks(event)">
+            <img src="tithi.jpg" alt="Shuvo and Tithi holding hands" class="photo-frame" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800';">
+            <div class="photo-caption">💍 Wrapped In Your Love, Tithi ❤️</div>
+        </div>
 
-        <!-- Interactive Milestones -->
+        <!-- Dynamic Timelines -->
         <div class="timeline-grid">
-            <!-- Engagement Card -->
-            <div class="card">
-                <div class="card-badge">Chapter One</div>
+            <div class="card card-engagement">
+                <div class="card-badge">✨ Chapter One</div>
                 <div class="card-title">💍 Our Engagement</div>
                 <div class="card-date">05 September 2025</div>
                 <div class="live-counter" id="engagementTimer">Calculating...</div>
             </div>
 
-            <!-- Wedding Card -->
-            <div class="card">
-                <div class="card-badge">Chapter Two</div>
-                <div class="card-title">💒 Our Marriage</div>
+            <div class="card card-marriage">
+                <div class="card-badge">💒 Chapter Two</div>
+                <div class="card-title">💖 Our Marriage</div>
                 <div class="card-date">22 March 2026</div>
                 <div class="live-counter" id="marriageTimer">Calculating...</div>
             </div>
         </div>
 
         <!-- Quotes Section -->
-        <div class="quote-container">
+        <div class="quote-box">
             <div class="quote-text" id="quoteDisplay">
                 "In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."
             </div>
         </div>
 
-        <!-- Interactive Buttons -->
+        <!-- Functional Buttons -->
         <div class="action-btns">
-            <button class="btn btn-primary" onclick="openModal()">
-                💌 Open My Heart
+            <button class="btn btn-love" onclick="openModal()">
+                💌 Secret Love Letter
             </button>
-            <button class="btn btn-secondary" onclick="triggerLoveExplosion(event)">
-                ✨ Send Tithi A Kiss
+            <button class="btn btn-magic" onclick="triggerFireworks(event)">
+                🎆 Rainbow Heart Burst
             </button>
         </div>
 
@@ -372,27 +409,27 @@
         </div>
     </div>
 
-    <!-- Secret Love Letter Pop-up Modal -->
+    <!-- Pop-up Love Letter -->
     <div class="modal-overlay" id="loveModal">
         <div class="modal-box">
-            <div class="modal-title">My Dearest Tithi,</div>
+            <div class="modal-title">Dearest Tithi,</div>
             <div class="modal-body">
-                From the moment you entered my life, every single day has felt brighter and more beautiful.<br><br>
-                Our engagement on <b>05-09-2025</b> was the promise of a lifetime, and our wedding on <b>22-03-2026</b> marks the beginning of our forever.<br><br>
-                Thank you for being my dream, my partner, and my endless love. My heart is yours today, tomorrow, and for all eternity.
+                Holding your hand feels like holding my entire world.<br><br>
+                From our engagement on <b>05-09-2025</b> to our wedding on <b>22-03-2026</b>, every single heartbeat of mine belongs to you.<br><br>
+                Thank you for being my dream come true. I love you beyond words!
             </div>
             <button class="close-btn" onclick="closeModal()">Forever Yours ❤️</button>
         </div>
     </div>
 
     <script>
-        // --- 1. Dynamic Quotes Rotating System ---
+        // --- Quotes Carousel ---
         const quotes = [
             `"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."`,
-            `"I look at you, Tithi, and I see the rest of my life right in front of my eyes."`,
+            `"Holding your hand is my favorite thing to do in this whole world, Tithi."`,
             `"05-09-2025 promised our love, 22-03-2026 sealed our forever."`,
-            `"You are my sun, my moon, and all of my stars."`,
-            `"Every moment spent with you is like a beautiful dream come true."`
+            `"You are my sun, my moon, and all of my stars, Tithi."`,
+            `"Every second spent holding your hand feels like a lifetime of joy."`
         ];
 
         let quoteIndex = 0;
@@ -405,49 +442,72 @@
                 quoteEl.textContent = quotes[quoteIndex];
                 quoteEl.style.opacity = '1';
             }, 500);
-        }, 5500);
+        }, 5000);
 
-        // --- 2. Real-Time Relationship Counters ---
+        // --- Live Precise Timers ---
         const engagementDate = new Date("2025-09-05T00:00:00");
         const marriageDate = new Date("2026-03-22T00:00:00");
 
         function updateTimers() {
             const now = new Date();
 
-            // Engagement Timer (Count Since / Countdown)
+            // Engagement
             const engDiff = now - engagementDate;
             const engDays = Math.floor(Math.abs(engDiff) / (1000 * 60 * 60 * 24));
             const engHours = Math.floor((Math.abs(engDiff) / (1000 * 60 * 60)) % 24);
             const engMins = Math.floor((Math.abs(engDiff) / (1000 * 60)) % 60);
-            
-            if (engDiff >= 0) {
-                document.getElementById("engagementTimer").textContent = `${engDays}d ${engHours}h ${engMins}m Together`;
-            } else {
-                document.getElementById("engagementTimer").textContent = `${engDays}d ${engHours}h ${engMins}m Remaining`;
-            }
+            const engSecs = Math.floor((Math.abs(engDiff) / 1000) % 60);
 
-            // Marriage Timer
+            document.getElementById("engagementTimer").textContent = 
+                engDiff >= 0 
+                ? `${engDays}d ${engHours}h ${engMins}m ${engSecs}s Together` 
+                : `${engDays}d ${engHours}h ${engMins}m ${engSecs}s Countdown`;
+
+            // Marriage
             const marDiff = now - marriageDate;
             const marDays = Math.floor(Math.abs(marDiff) / (1000 * 60 * 60 * 24));
             const marHours = Math.floor((Math.abs(marDiff) / (1000 * 60 * 60)) % 24);
             const marMins = Math.floor((Math.abs(marDiff) / (1000 * 60)) % 60);
+            const marSecs = Math.floor((Math.abs(marDiff) / 1000) % 60);
 
-            if (marDiff >= 0) {
-                document.getElementById("marriageTimer").textContent = `${marDays}d ${marHours}h ${marMins}m Married ❤️`;
-            } else {
-                document.getElementById("marriageTimer").textContent = `${marDays}d ${marHours}h ${marMins}m To Go 💒`;
-            }
+            document.getElementById("marriageTimer").textContent = 
+                marDiff >= 0 
+                ? `${marDays}d ${marHours}h ${marMins}m ${marSecs}s Married ❤️` 
+                : `${marDays}d ${marHours}h ${marMins}m ${marSecs}s Countdown 💒`;
         }
 
         setInterval(updateTimers, 1000);
         updateTimers();
 
-        // --- 3. Modal Controllers ---
+        // --- Modal Control ---
         const modal = document.getElementById("loveModal");
-        function openModal() { modal.classList.add("active"); }
+        function openModal() { modal.classList.add("active"); playChime(); }
         function closeModal() { modal.classList.remove("active"); }
 
-        // --- 4. Interactive Magic Trail & Canvas Particles ---
+        // --- Sound Synthesizer (Romantic Soft Chime) ---
+        function playChime() {
+            try {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                const ctx = new AudioContext();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.8); // A5
+
+                gain.gain.setValueAtTime(0.3, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
+
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                osc.start();
+                osc.stop(ctx.currentTime + 0.8);
+            } catch(e) {}
+        }
+
+        // --- Interactive Rainbow Particle Canvas ---
         const canvas = document.getElementById("magicCanvas");
         const ctx = canvas.getContext("2d");
 
@@ -460,22 +520,24 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
+        const colors = ['#ff0055', '#ff007f', '#00f0ff', '#ffcc00', '#00ff66', '#9b51e0'];
+        const symbols = ['❤️', '💖', '✨', '💕', '💍', '🌸'];
+
         class Particle {
-            constructor(x, y, isExplosion = false) {
+            constructor(x, y, isBurst = false) {
                 this.x = x;
                 this.y = y;
-                this.size = Math.random() * (isExplosion ? 16 : 8) + 4;
-                this.vx = (Math.random() - 0.5) * (isExplosion ? 12 : 3);
-                this.vy = (Math.random() - 0.5) * (isExplosion ? 12 : 3) - (isExplosion ? 2 : 1);
+                this.size = Math.random() * (isBurst ? 14 : 7) + 4;
+                this.vx = (Math.random() - 0.5) * (isBurst ? 14 : 3);
+                this.vy = (Math.random() - 0.5) * (isBurst ? 14 : 3) - (isBurst ? 3 : 1);
                 this.alpha = 1;
-                this.color = ['#ff1493', '#ff69b4', '#ffd700', '#ff77a9', '#ffffff'][Math.floor(Math.random() * 5)];
-                this.symbol = ['❤️', '💖', '✨', '💕', '🌸'][Math.floor(Math.random() * 5)];
+                this.symbol = symbols[Math.floor(Math.random() * symbols.length)];
             }
 
             update() {
                 this.x += this.vx;
                 this.y += this.vy;
-                this.alpha -= 0.015;
+                this.alpha -= 0.018;
             }
 
             draw() {
@@ -487,43 +549,31 @@
             }
         }
 
-        // Ambient Background Spawner
-        function spawnAmbient() {
-            if (particles.length < 40) {
-                particles.push(new Particle(Math.random() * canvas.width, canvas.height + 20));
-            }
-        }
-        setInterval(spawnAmbient, 300);
-
-        // Touch & Mouse Trail
-        function addTrail(x, y) {
-            for (let i = 0; i < 2; i++) {
-                particles.push(new Particle(x, y));
-            }
-        }
-
-        window.addEventListener("mousemove", (e) => addTrail(e.clientX, e.clientY));
-        window.addEventListener("touchmove", (e) => {
-            if (e.touches.length > 0) addTrail(e.touches[0].clientX, e.touches[0].clientY);
-        });
-
-        // Love Explosion Effect
-        function triggerLoveExplosion(e) {
+        function triggerFireworks(e) {
+            playChime();
             const x = e.clientX || window.innerWidth / 2;
             const y = e.clientY || window.innerHeight / 2;
-            for (let i = 0; i < 45; i++) {
+            for (let i = 0; i < 50; i++) {
                 particles.push(new Particle(x, y, true));
             }
         }
+
+        window.addEventListener("mousemove", (e) => {
+            if (Math.random() < 0.3) particles.push(new Particle(e.clientX, e.clientY));
+        });
+
+        window.addEventListener("touchmove", (e) => {
+            if (e.touches.length > 0 && Math.random() < 0.3) {
+                particles.push(new Particle(e.touches[0].clientX, e.touches[0].clientY));
+            }
+        });
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             for (let i = particles.length - 1; i >= 0; i--) {
                 particles[i].update();
                 particles[i].draw();
-                if (particles[i].alpha <= 0) {
-                    particles.splice(i, 1);
-                }
+                if (particles[i].alpha <= 0) particles.splice(i, 1);
             }
             requestAnimationFrame(animate);
         }
