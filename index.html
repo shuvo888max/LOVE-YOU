@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Neon Brick Breaker Deluxe</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            touch-action: none; /* Prevents mobile scrolling while playing */
         }
         body {
             background: #090A0F;
@@ -20,45 +21,50 @@
             justify-content: center;
             min-height: 100vh;
             overflow: hidden;
+            padding: 10px;
         }
         .ui-container {
-            width: 800px;
+            width: 100%;
+            max-width: 800px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            padding: 10px 20px;
+            padding: 10px 15px;
             background: rgba(255, 255, 255, 0.05);
             border-radius: 10px;
             backdrop-filter: blur(5px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         .stat-box {
-            font-size: 1.2rem;
+            font-size: clamp(0.9rem, 3vw, 1.2rem);
             font-weight: bold;
             letter-spacing: 1px;
             text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
         }
         .game-wrapper {
             position: relative;
-            width: 800px;
-            height: 600px;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 4 / 3;
         }
         canvas {
+            width: 100%;
+            height: 100%;
             border: 3px solid #00F0FF;
             background: radial-gradient(circle, #151828 0%, #080911 100%);
             box-shadow: 0 0 30px rgba(0, 240, 255, 0.3);
             border-radius: 8px;
-            cursor: none;
+            display: block;
         }
-        /* Popup Overlay Styling */
+        /* Popup Overlay */
         #startScreen {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(9, 10, 15, 0.88);
+            background: rgba(9, 10, 15, 0.92);
             backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
@@ -66,28 +72,28 @@
             align-items: center;
             border-radius: 8px;
             z-index: 10;
+            padding: 20px;
+            text-align: center;
         }
         .pop-title {
-            font-size: 2.8rem;
+            font-size: clamp(1.8rem, 6vw, 2.8rem);
             font-weight: 800;
             color: #00F0FF;
             text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
             margin-bottom: 15px;
-            letter-spacing: 2px;
         }
         .pop-credit {
-            font-size: 1.3rem;
+            font-size: clamp(0.95rem, 3.2vw, 1.25rem);
             font-weight: 600;
             color: #FF007F;
             text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
-            margin-bottom: 30px;
-            letter-spacing: 1px;
-            text-align: center;
+            margin-bottom: 25px;
             line-height: 1.5;
+            padding: 0 10px;
         }
         .start-btn {
-            padding: 14px 35px;
-            font-size: 1.2rem;
+            padding: 12px 30px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
             font-weight: bold;
             color: #090A0F;
             background: #00FF66;
@@ -97,16 +103,49 @@
             box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
             transition: all 0.2s ease-in-out;
         }
-        .start-btn:hover {
-            transform: scale(1.08);
-            box-shadow: 0 0 30px rgba(0, 255, 102, 1);
+        .start-btn:active {
+            transform: scale(0.95);
         }
         .instructions {
-            margin-top: 15px;
+            margin-top: 10px;
             color: #888;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
+            letter-spacing: 1.5px;
+            text-align: center;
+        }
+        .dev-footer {
+            margin-top: 6px;
+            color: #00F0FF;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-shadow: 0 0 8px rgba(0, 240, 255, 0.5);
+            text-align: center;
+        }
+        /* Mobile Touch Buttons */
+        .mobile-controls {
+            display: none;
+            width: 100%;
+            max-width: 800px;
+            justify-content: space-between;
+            margin-top: 10px;
+            gap: 15px;
+        }
+        .touch-btn {
+            flex: 1;
+            padding: 15px;
+            background: rgba(0, 240, 255, 0.15);
+            border: 2px solid #00F0FF;
+            color: #00F0FF;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            user-select: none;
+        }
+        @media (max-width: 768px) {
+            .mobile-controls {
+                display: flex;
+            }
         }
     </style>
 </head>
@@ -119,32 +158,34 @@
     </div>
 
     <div class="game-wrapper">
-        <!-- Start Popup Screen -->
         <div id="startScreen">
             <div class="pop-title">BRICK BREAKER DELUXE</div>
-            <div class="pop-credit">Developed by Shuvo<br><span style="font-size: 1rem; color: #FFF;">SWE DPT Daffodil Int. Uni</span></div>
+            <div class="pop-credit">Game Developed BY Md S H Shuvo<br><span style="font-size: 0.85em; color: #FFF;">Student Department Of SWE , DIU</span></div>
             <button class="start-btn" onclick="startGame()">START GAME</button>
         </div>
 
         <canvas id="gameCanvas" width="800" height="600"></canvas>
     </div>
     
-    <div class="instructions">Move Mouse Left / Right to Control Paddle</div>
+    <div class="instructions">PC: Mouse or Arrow Keys | Mobile: Drag Screen or Use Buttons</div>
+    <div class="dev-footer">Game Developed BY Md S H Shuvo , Student Department Of SWE , DIU</div>
+
+    <!-- On-screen controls for mobile devices -->
+    <div class="mobile-controls">
+        <button class="touch-btn" id="leftBtn">◀ LEFT</button>
+        <button class="touch-btn" id="rightBtn">RIGHT ▶</button>
+    </div>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
         const startScreen = document.getElementById("startScreen");
 
-        // UI Elements
         const scoreEl = document.getElementById("score");
         const livesEl = document.getElementById("lives");
         const levelEl = document.getElementById("level");
 
-        // Game State Control
         let gameRunning = false;
-
-        // Game Variables
         let score = 0;
         let lives = 3;
         let level = 1;
@@ -157,7 +198,9 @@
             x: (canvas.width - 120) / 2,
             y: canvas.height - 30,
             color: "#00F0FF",
-            glow: "#00F0FF"
+            glow: "#00F0FF",
+            speed: 8,
+            dx: 0
         };
 
         // Ball Configuration
@@ -202,14 +245,45 @@
         }
         initBricks();
 
-        // Mouse Controls
+        function updatePaddlePosition(clientX) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const relativeX = (clientX - rect.left) * scaleX;
+            paddle.x = Math.max(0, Math.min(canvas.width - paddle.width, relativeX - paddle.width / 2));
+        }
+
+        // PC Mouse Control
         document.addEventListener("mousemove", (e) => {
             if (!gameRunning) return;
-            const relativeX = e.clientX - canvas.offsetLeft;
-            if (relativeX > 0 && relativeX < canvas.width) {
-                paddle.x = relativeX - paddle.width / 2;
-            }
+            updatePaddlePosition(e.clientX);
         });
+
+        // Mobile Touch Control (Drag Finger)
+        canvas.addEventListener("touchmove", (e) => {
+            if (!gameRunning) return;
+            e.preventDefault();
+            if (e.touches.length > 0) {
+                updatePaddlePosition(e.touches[0].clientX);
+            }
+        }, { passive: false });
+
+        // PC Keyboard Controls
+        document.addEventListener("keydown", (e) => {
+            if (e.key === "ArrowRight" || e.key === "d") paddle.dx = paddle.speed;
+            if (e.key === "ArrowLeft" || e.key === "a") paddle.dx = -paddle.speed;
+        });
+        document.addEventListener("keyup", (e) => {
+            if (["ArrowRight", "ArrowLeft", "a", "d"].includes(e.key)) paddle.dx = 0;
+        });
+
+        // Mobile Button Controls
+        const leftBtn = document.getElementById("leftBtn");
+        const rightBtn = document.getElementById("rightBtn");
+
+        leftBtn.addEventListener("touchstart", (e) => { e.preventDefault(); paddle.dx = -paddle.speed; });
+        leftBtn.addEventListener("touchend", () => paddle.dx = 0);
+        rightBtn.addEventListener("touchstart", (e) => { e.preventDefault(); paddle.dx = paddle.speed; });
+        rightBtn.addEventListener("touchend", () => paddle.dx = 0);
 
         function startGame() {
             startScreen.style.display = "none";
@@ -218,7 +292,7 @@
             draw();
         }
 
-        // Particle System for Explosions
+        // Particle System
         function createParticles(x, y, color) {
             for (let i = 0; i < 12; i++) {
                 particles.push({
@@ -240,9 +314,7 @@
                 p.x += p.dx;
                 p.y += p.dy;
                 p.alpha -= p.life;
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                }
+                if (p.alpha <= 0) particles.splice(i, 1);
             }
         }
 
@@ -260,7 +332,6 @@
             });
         }
 
-        // Draw Paddle
         function drawPaddle() {
             ctx.save();
             ctx.fillStyle = paddle.color;
@@ -272,7 +343,6 @@
             ctx.restore();
         }
 
-        // Draw Ball
         function drawBall() {
             ctx.save();
             ctx.fillStyle = ball.color;
@@ -284,7 +354,6 @@
             ctx.restore();
         }
 
-        // Draw Bricks
         function drawBricks() {
             for (let c = 0; c < brickColumnCount; c++) {
                 for (let r = 0; r < brickRowCount; r++) {
@@ -308,7 +377,6 @@
             }
         }
 
-        // Collision Detection
         function collisionDetection() {
             for (let c = 0; c < brickColumnCount; c++) {
                 for (let r = 0; r < brickRowCount; r++) {
@@ -346,9 +414,9 @@
             ball.dx = ball.speed * (Math.random() > 0.5 ? 1 : -1);
             ball.dy = -ball.speed;
             paddle.x = (canvas.width - paddle.width) / 2;
+            paddle.dx = 0;
         }
 
-        // Main Game Loop
         function draw() {
             if (!gameRunning) return;
 
@@ -362,16 +430,17 @@
             collisionDetection();
             updateParticles();
 
-            // Wall Collisions
+            paddle.x += paddle.dx;
+            if (paddle.x < 0) paddle.x = 0;
+            if (paddle.x + paddle.width > canvas.width) paddle.x = canvas.width - paddle.width;
+
             if (ball.x + ball.dx > canvas.width - ball.radius || ball.x + ball.dx < ball.radius) {
                 ball.dx = -ball.dx;
             }
 
-            // Top Collision
             if (ball.y + ball.dy < ball.radius) {
                 ball.dy = -ball.dy;
             } 
-            // Bottom Collision
             else if (ball.y + ball.dy > canvas.height - ball.radius - 20) {
                 if (ball.x > paddle.x && ball.x < paddle.x + paddle.width) {
                     let hitPoint = (ball.x - (paddle.x + paddle.width / 2)) / (paddle.width / 2);
@@ -395,7 +464,6 @@
             requestAnimationFrame(draw);
         }
 
-        // Initial preview draw before game starts
         drawBricks();
         drawPaddle();
     </script>
