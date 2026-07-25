@@ -2,382 +2,298 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Fruit Ninja - Deluxe Edition</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shuvo's Love Tithi</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            touch-action: none; /* Prevents touch scrolling while slicing */
-            user-select: none;
         }
+
         body {
-            background: #110e19;
-            color: #FFF;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a0826 0%, #3a0d33 50%, #1a0826 100%);
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
-            overflow: hidden;
-            padding: 10px;
-        }
-        .ui-container {
-            width: 100%;
-            max-width: 800px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            padding: 10px 20px;
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .stat-box {
-            font-size: clamp(0.9rem, 3vw, 1.2rem);
-            font-weight: bold;
-            letter-spacing: 1px;
-            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-        }
-        .game-wrapper {
+            overflow-x: hidden;
             position: relative;
-            width: 100%;
-            max-width: 800px;
-            aspect-ratio: 4 / 3;
+            padding: 20px;
         }
-        canvas {
-            width: 100%;
-            height: 100%;
-            border: 3px solid #FF9900;
-            background: radial-gradient(circle, #2c1b30 0%, #0d0a12 100%);
-            box-shadow: 0 0 30px rgba(255, 153, 0, 0.3);
-            border-radius: 12px;
-            display: block;
-            cursor: crosshair;
-        }
-        /* Popup Screen */
-        #startScreen {
-            position: absolute;
+
+        /* Floating Animated Hearts Background */
+        .heart-bg {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(13, 10, 18, 0.92);
-            backdrop-filter: blur(8px);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-radius: 12px;
-            z-index: 10;
-            padding: 20px;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .floating-heart {
+            position: absolute;
+            color: rgba(255, 105, 180, 0.6);
+            animation: floatUp linear infinite;
+            font-size: 20px;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(100vh) scale(0.5) rotate(0deg);
+                opacity: 0;
+            }
+            20% {
+                opacity: 0.8;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.3) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Main Container */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            width: 100%;
             text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 192, 203, 0.2);
+            border-radius: 24px;
+            padding: 40px 25px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5),
+                        0 0 25px rgba(255, 105, 180, 0.2);
+            animation: fadeIn 1.5s ease-in-out;
         }
-        .pop-title {
-            font-size: clamp(2rem, 7vw, 3.2rem);
-            font-weight: 800;
-            color: #FF9900;
-            text-shadow: 0 0 20px rgba(255, 153, 0, 0.8);
-            margin-bottom: 15px;
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .pop-credit {
-            font-size: clamp(0.95rem, 3.2vw, 1.25rem);
-            font-weight: 600;
-            color: #FF007F;
-            text-shadow: 0 0 15px rgba(255, 0, 127, 0.8);
-            margin-bottom: 25px;
-            line-height: 1.5;
+
+        /* Title Styling */
+        h1.title {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(2.8rem, 8vw, 4.8rem);
+            color: #ff69b4;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.7),
+                         0 0 30px rgba(255, 192, 203, 0.4);
+            margin-bottom: 10px;
+            letter-spacing: 1px;
         }
-        .start-btn {
-            padding: 12px 35px;
-            font-size: clamp(1rem, 4vw, 1.3rem);
-            font-weight: bold;
-            color: #090A0F;
-            background: #00FF66;
-            border: none;
-            border-radius: 30px;
-            cursor: pointer;
-            box-shadow: 0 0 20px rgba(0, 255, 102, 0.6);
-            transition: all 0.2s ease-in-out;
-        }
-        .start-btn:active {
-            transform: scale(0.95);
-        }
-        .instructions {
-            margin-top: 10px;
-            color: #888;
-            font-size: 0.8rem;
+
+        .subtitle {
+            font-size: clamp(0.9rem, 3vw, 1.1rem);
+            color: #e0b0ff;
+            letter-spacing: 3px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            text-align: center;
+            margin-bottom: 30px;
+            font-weight: 300;
         }
-        .dev-footer {
-            margin-top: 6px;
-            color: #FF9900;
-            font-size: 0.85rem;
+
+        /* Interactive Pulsing Heart */
+        .pulse-heart {
+            font-size: 60px;
+            color: #ff1493;
+            display: inline-block;
+            margin: 15px 0 30px;
+            animation: pulse 1.2s infinite ease-in-out;
+            text-shadow: 0 0 20px #ff1493;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .pulse-heart:hover {
+            transform: scale(1.2);
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.25); }
+        }
+
+        /* Key Dates Section */
+        .dates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+        }
+
+        .date-card {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 105, 180, 0.3);
+            border-radius: 16px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .date-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: #ff69b4;
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .date-card h3 {
+            font-size: 1.1rem;
+            color: #ffb6c1;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .date-card p {
+            font-size: 1.5rem;
             font-weight: 600;
-            text-shadow: 0 0 8px rgba(255, 153, 0, 0.5);
-            text-align: center;
+            color: #ffffff;
+            text-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Love Quotes Section */
+        .quote-box {
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 4px solid #ff1493;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-top: 20px;
+            text-align: italic;
+        }
+
+        .quote-text {
+            font-size: clamp(1rem, 3.5vw, 1.25rem);
+            color: #ffe4e1;
+            line-height: 1.6;
+            font-style: italic;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote-author {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: #ffb6c1;
+            font-style: normal;
+            font-weight: 600;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 25px;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            letter-spacing: 1px;
+        }
+
+        .footer span {
+            color: #ff69b4;
+            font-weight: 600;
         }
     </style>
 </head>
 <body>
 
-    <div class="ui-container">
-        <div class="stat-box" style="color: #FF9900;">SCORE: <span id="score">0</span></div>
-        <div class="stat-box" style="color: #FF007F;">LIVES: <span id="lives">3</span></div>
-    </div>
+    <!-- Floating Heart Background Layer -->
+    <div class="heart-bg" id="heartBg"></div>
 
-    <div class="game-wrapper">
-        <div id="startScreen">
-            <div class="pop-title">FRUIT SLICER</div>
-            <div class="pop-credit">Game Developed BY Md S H Shuvo<br><span style="font-size: 0.85em; color: #FFF;">Student Department Of SWE , DIU</span></div>
-            <button class="start-btn" onclick="startGame()">START SLICING</button>
+    <!-- Main Content Card -->
+    <div class="container">
+        <h1 class="title">Shuvo's Love Tithi</h1>
+        <p class="subtitle">Forever & Always Bound By Heart</p>
+
+        <div class="pulse-heart" onclick="createHeartBurst(event)">❤️</div>
+
+        <!-- Key Dates -->
+        <div class="dates-grid">
+            <div class="date-card">
+                <h3>💍 Our Engagement</h3>
+                <p>05 • 09 • 2025</p>
+            </div>
+            <div class="date-card">
+                <h3>💒 Our Marriage</h3>
+                <p>22 • 03 • 2026</p>
+            </div>
         </div>
 
-        <canvas id="gameCanvas" width="800" height="600"></canvas>
+        <!-- Rotating Love Quotes -->
+        <div class="quote-box">
+            <p class="quote-text" id="quoteDisplay">"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."</p>
+            <p class="quote-author">— Dedicated to Tithi</p>
+        </div>
+
+        <div class="footer">
+            Crafted with Infinite Love by <span>Md S H Shuvo</span>
+        </div>
     </div>
-    
-    <div class="instructions">Swipe / Drag your mouse or finger to slice fruits!</div>
-    <div class="dev-footer">Game Developed BY Md S H Shuvo , Student Department Of SWE , DIU</div>
 
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        const startScreen = document.getElementById("startScreen");
-
-        const scoreEl = document.getElementById("score");
-        const livesEl = document.getElementById("lives");
-
-        let gameRunning = false;
-        let score = 0;
-        let lives = 3;
-
-        let fruits = [];
-        let particles = [];
-        let slicePath = [];
-
-        // Fruit Definitions
-        const fruitTypes = [
-            { name: 'Watermelon', color: '#2ECC71', innerColor: '#E74C3C', radius: 35 },
-            { name: 'Orange', color: '#E67E22', innerColor: '#F39C12', radius: 28 },
-            { name: 'Apple', color: '#E74C3C', innerColor: '#FFD700', radius: 25 },
-            { name: 'Lemon', color: '#F1C40F', innerColor: '#FFF', radius: 22 },
-            { name: 'Plum', color: '#8E44AD', innerColor: '#9B59B6', radius: 20 }
+        // Array of Romantic Quotes
+        const quotes = [
+            `"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."`,
+            `"I look at you and see the rest of my life in your eyes."`,
+            `"Every love story is beautiful, but ours is my absolute favorite, Tithi."`,
+            `"From our engagement on 05-09-2025 to our marriage on 22-03-2026 and forever after, my heart belongs to you."`,
+            `"You are my today and all of my tomorrows."`
         ];
 
-        // Track user blade swipe trail
-        function addSlicePoint(x, y) {
-            const rect = canvas.getBoundingClientRect();
-            const scaleX = canvas.width / rect.width;
-            const scaleY = canvas.height / rect.height;
-            const canvasX = (x - rect.left) * scaleX;
-            const canvasY = (y - rect.top) * scaleY;
+        let quoteIndex = 0;
+        const quoteDisplay = document.getElementById("quoteDisplay");
 
-            slicePath.push({ x: canvasX, y: canvasY, time: Date.now() });
-            checkSlices(canvasX, canvasY);
-        }
+        // Cycle quotes smoothly every 5 seconds
+        setInterval(() => {
+            quoteDisplay.style.opacity = 0;
+            setTimeout(() => {
+                quoteIndex = (quoteIndex + 1) % quotes.length;
+                quoteDisplay.textContent = quotes[quoteIndex];
+                quoteDisplay.style.opacity = 1;
+            }, 500);
+        }, 5000);
 
-        // Event Listeners for PC & Mobile
-        let isMouseDown = false;
-        window.addEventListener("mousedown", (e) => { isMouseDown = true; addSlicePoint(e.clientX, e.clientY); });
-        window.addEventListener("mouseup", () => { isMouseDown = false; });
-        window.addEventListener("mousemove", (e) => { if (isMouseDown && gameRunning) addSlicePoint(e.clientX, e.clientY); });
+        // Generate Floating Background Hearts
+        const heartBg = document.getElementById("heartBg");
+        const heartIcons = ['❤️', '💖', '💗', '💕', '✨'];
 
-        window.addEventListener("touchstart", (e) => {
-            if (!gameRunning) return;
-            if (e.touches.length > 0) addSlicePoint(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
-
-        window.addEventListener("touchmove", (e) => {
-            if (!gameRunning) return;
-            if (e.touches.length > 0) addSlicePoint(e.touches[0].clientX, e.touches[0].clientY);
-        }, { passive: true });
-
-        function startGame() {
-            startScreen.style.display = "none";
-            gameRunning = true;
-            score = 0;
-            lives = 3;
-            scoreEl.textContent = score;
-            livesEl.textContent = lives;
-            fruits = [];
-            particles = [];
-            slicePath = [];
-            draw();
-        }
-
-        // Spawn Fruit with curved trajectory
-        function spawnFruit() {
-            const type = fruitTypes[Math.floor(Math.random() * fruitTypes.length)];
-            const x = Math.random() * (canvas.width - 200) + 100;
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("floating-heart");
+            heart.textContent = heartIcons[Math.floor(Math.random() * heartIcons.length)];
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 4) + "s";
+            heart.style.fontSize = (Math.random() * 15 + 15) + "px";
             
-            fruits.push({
-                x: x,
-                y: canvas.height + type.radius,
-                vx: (canvas.width / 2 - x) * 0.015 + (Math.random() - 0.5) * 2,
-                vy: -(Math.random() * 4 + 13), // Launch force
-                gravity: 0.28,
-                radius: type.radius,
-                color: type.color,
-                innerColor: type.innerColor,
-                sliced: false,
-                halves: []
-            });
+            heartBg.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 7000);
         }
 
-        // Juice explosion effects
-        function createJuiceSplatter(x, y, color) {
-            for (let i = 0; i < 16; i++) {
-                particles.push({
-                    x: x,
-                    y: y,
-                    vx: (Math.random() - 0.5) * 10,
-                    vy: (Math.random() - 0.5) * 10,
-                    radius: Math.random() * 4 + 2,
-                    color: color,
-                    alpha: 1,
-                    life: 0.04
-                });
+        setInterval(createHeart, 300);
+
+        // Interactive Heart Click Effect
+        function createHeartBurst(e) {
+            for (let i = 0; i < 12; i++) {
+                const burst = document.createElement("div");
+                burst.classList.add("floating-heart");
+                burst.textContent = "💖";
+                burst.style.left = e.clientX + (Math.random() * 100 - 50) + "px";
+                burst.style.top = e.clientY + (Math.random() * 100 - 50) + "px";
+                burst.style.animation = "floatUp 2s linear forwards";
+                document.body.appendChild(burst);
+
+                setTimeout(() => burst.remove(), 2000);
             }
-        }
-
-        // Check collision between blade trail and fruits
-        function checkSlices(x, y) {
-            fruits.forEach(fruit => {
-                if (!fruit.sliced) {
-                    const dist = Math.hypot(fruit.x - x, fruit.y - y);
-                    if (dist < fruit.radius) {
-                        fruit.sliced = true;
-                        score += 10;
-                        scoreEl.textContent = score;
-                        createJuiceSplatter(fruit.x, fruit.y, fruit.innerColor);
-
-                        // Split into two halves
-                        fruit.halves = [
-                            { x: fruit.x - 10, y: fruit.y, vx: -3, vy: -3, angle: -0.2 },
-                            { x: fruit.x + 10, y: fruit.y, vx: 3, vy: -3, angle: 0.2 }
-                        ];
-                    }
-                }
-            });
-        }
-
-        function drawBladeTrail() {
-            const now = Date.now();
-            slicePath = slicePath.filter(p => now - p.time < 150); // Trail lasts 150ms
-
-            if (slicePath.length < 2) return;
-
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(slicePath[0].x, slicePath[0].y);
-            for (let i = 1; i < slicePath.length; i++) {
-                ctx.lineTo(slicePath[i].x, slicePath[i].y);
-            }
-            ctx.strokeStyle = "#FFF";
-            ctx.lineWidth = 5;
-            ctx.shadowColor = "#00F0FF";
-            ctx.shadowBlur = 12;
-            ctx.lineCap = "round";
-            ctx.stroke();
-            ctx.restore();
-        }
-
-        function draw() {
-            if (!gameRunning) return;
-
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Random Fruit Spawner
-            if (Math.random() < 0.025) {
-                spawnFruit();
-            }
-
-            // Update & Render Fruits
-            for (let i = fruits.length - 1; i >= 0; i--) {
-                const f = fruits[i];
-                
-                if (!f.sliced) {
-                    f.x += f.vx;
-                    f.y += f.vy;
-                    f.vy += f.gravity;
-
-                    // Draw Whole Fruit
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.arc(f.x, f.y, f.radius, 0, Math.PI * 2);
-                    ctx.fillStyle = f.color;
-                    ctx.shadowColor = f.color;
-                    ctx.shadowBlur = 10;
-                    ctx.fill();
-                    
-                    // Inner glow detail
-                    ctx.beginPath();
-                    ctx.arc(f.x, f.y, f.radius * 0.6, 0, Math.PI * 2);
-                    ctx.fillStyle = f.innerColor;
-                    ctx.fill();
-                    ctx.restore();
-
-                    // Check if fruit fell off bottom screen
-                    if (f.y > canvas.height + 50 && f.vy > 0) {
-                        fruits.splice(i, 1);
-                        lives--;
-                        livesEl.textContent = lives;
-                        if (lives <= 0) {
-                            alert(`GAME OVER!\nFinal Score: ${score}`);
-                            document.location.reload();
-                        }
-                    }
-                } else {
-                    // Draw Sliced Halves
-                    f.halves.forEach(half => {
-                        half.x += half.vx;
-                        half.y += half.vy;
-                        half.vy += f.gravity;
-
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.arc(half.x, half.y, f.radius * 0.8, 0, Math.PI);
-                        ctx.fillStyle = f.innerColor;
-                        ctx.fill();
-                        ctx.restore();
-                    });
-
-                    // Remove halves once off-screen
-                    if (f.halves[0] && f.halves[0].y > canvas.height + 50) {
-                        fruits.splice(i, 1);
-                    }
-                }
-            }
-
-            // Update & Render Particle FX
-            for (let i = particles.length - 1; i >= 0; i--) {
-                const p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.alpha -= p.life;
-
-                if (p.alpha <= 0) {
-                    particles.splice(i, 1);
-                } else {
-                    ctx.save();
-                    ctx.globalAlpha = p.alpha;
-                    ctx.fillStyle = p.color;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-            }
-
-            drawBladeTrail();
-
-            requestAnimationFrame(draw);
         }
     </script>
 </body>
