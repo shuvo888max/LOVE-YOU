@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shuvo's Love Tithi — A Multicolor Celebration of Us</title>
+    <title>Shuvo's Love Tithi — A Celebration of Our Family</title>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:ital,wght@0,600;1,400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -27,7 +27,7 @@
             padding: 25px 15px;
         }
 
-        /* Animated Multicolor Gradient Background Glow */
+        /* Animated Background Glow */
         .bg-glow {
             position: fixed;
             top: 50%;
@@ -57,7 +57,7 @@
             z-index: 1;
         }
 
-        /* Main Glass Container */
+        /* Main Glass Card */
         .glass-card {
             position: relative;
             z-index: 2;
@@ -75,7 +75,7 @@
                         0 0 40px rgba(255, 0, 128, 0.3);
         }
 
-        /* Multicolor Animated Title */
+        /* Header Title */
         h1.title {
             font-family: 'Great Vibes', cursive;
             font-size: clamp(3.2rem, 10vw, 5.8rem);
@@ -104,7 +104,7 @@
             text-shadow: 0 0 12px rgba(255, 215, 0, 0.6);
         }
 
-        /* Featured Photo Frame */
+        /* Photo Frame */
         .photo-wrapper {
             position: relative;
             display: inline-block;
@@ -142,7 +142,7 @@
             text-shadow: 0 0 10px rgba(0, 240, 255, 0.8);
         }
 
-        /* Key Milestones Grid */
+        /* Timelines Grid */
         .timeline-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -243,7 +243,7 @@
         }
 
         .btn {
-            padding: 14px 30px;
+            padding: 14px 28px;
             font-size: 0.95rem;
             font-weight: 700;
             border-radius: 30px;
@@ -252,6 +252,22 @@
             transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-ammu {
+            background: linear-gradient(45deg, #ffcc00, #ff007f);
+            color: #ffffff;
+            box-shadow: 0 0 25px rgba(255, 204, 0, 0.6);
+            border: 1px solid #ffffff;
+            animation: pulseBtn 2s infinite;
+        }
+
+        @keyframes pulseBtn {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
 
         .btn-love {
@@ -260,23 +276,17 @@
             box-shadow: 0 0 20px rgba(255, 0, 85, 0.6);
         }
 
-        .btn-love:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 35px rgba(255, 0, 127, 0.9);
-        }
-
         .btn-magic {
             background: linear-gradient(45deg, #00f0ff, #9b51e0);
             color: #fff;
             box-shadow: 0 0 20px rgba(0, 240, 255, 0.5);
         }
 
-        .btn-magic:hover {
-            transform: scale(1.06);
-            box-shadow: 0 0 35px rgba(0, 240, 255, 0.8);
+        .btn:hover {
+            transform: scale(1.06) !important;
         }
 
-        /* Modal Overlay */
+        /* Modal Base */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -313,6 +323,11 @@
             transition: transform 0.4s ease;
         }
 
+        .modal-ammu-box {
+            border-color: #ffcc00;
+            box-shadow: 0 0 60px rgba(255, 204, 0, 0.5);
+        }
+
         .modal-overlay.active .modal-box {
             transform: scale(1);
         }
@@ -320,13 +335,14 @@
         .modal-title {
             font-family: 'Great Vibes', cursive;
             font-size: 3.2rem;
-            color: #ff007f;
+            color: #ffcc00;
             margin-bottom: 15px;
+            text-shadow: 0 0 15px rgba(255, 204, 0, 0.6);
         }
 
         .modal-body {
             font-size: 1rem;
-            line-height: 1.7;
+            line-height: 1.8;
             color: #ffe4e1;
             margin-bottom: 25px;
             font-family: 'Playfair Display', serif;
@@ -340,6 +356,7 @@
             border-radius: 25px;
             cursor: pointer;
             font-weight: 700;
+            margin: 5px;
         }
 
         .dev-footer {
@@ -364,7 +381,7 @@
         <h1 class="title">Shuvo's Love Tithi</h1>
         <p class="subtitle">"Holding Hands Today, Tomorrow & Forever"</p>
 
-        <!-- Uploaded Photo Display -->
+        <!-- Uploaded Photo Frame -->
         <div class="photo-wrapper" onclick="triggerFireworks(event)">
             <img src="tithi.jpg" alt="Shuvo and Tithi holding hands" class="photo-frame" onerror="this.src='https://images.unsplash.com/photo-1518199266791-5375a83190b7?q=80&w=800';">
             <div class="photo-caption">💍 Wrapped In Your Love, Tithi ❤️</div>
@@ -394,13 +411,16 @@
             </div>
         </div>
 
-        <!-- Functional Buttons -->
+        <!-- Action Buttons -->
         <div class="action-btns">
+            <button class="btn btn-ammu" onclick="openAmmuModal()">
+                🌸 A Message for Ammu
+            </button>
             <button class="btn btn-love" onclick="openModal()">
                 💌 Secret Love Letter
             </button>
             <button class="btn btn-magic" onclick="triggerFireworks(event)">
-                🎆 Rainbow Heart Burst
+                🎆 Rainbow Burst
             </button>
         </div>
 
@@ -409,10 +429,26 @@
         </div>
     </div>
 
-    <!-- Pop-up Love Letter -->
+    <!-- Special Message Modal for Ammu -->
+    <div class="modal-overlay" id="ammuModal">
+        <div class="modal-box modal-ammu-box">
+            <div class="modal-title">Dearest Ammu 💐</div>
+            <div class="modal-body">
+                <b>Dear Ammu,</b><br><br>
+                We are writing this message directly from the bottom of our hearts.<br><br>
+                Please forgive all of <b>Tithi's mistakes</b> and any mistakes I might have made as well. You are the heart of our family, and your blessings mean everything to us.<br><br>
+                As your daughter and your son-in-law, <b>we love you so much!</b> Your continuous prayers, warmth, and gentle love guide us every day.<br><br>
+                <b>Please keep a big smile on your face always — your happiness is our greatest treasure! 😊❤️</b>
+            </div>
+            <button class="close-btn" onclick="triggerAmmuSmile(event)">Send Ammu A Hug 🤗</button>
+            <button class="close-btn" style="background: rgba(255,255,255,0.2); color: #fff;" onclick="closeAmmuModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Secret Love Letter Pop-up for Tithi -->
     <div class="modal-overlay" id="loveModal">
         <div class="modal-box">
-            <div class="modal-title">Dearest Tithi,</div>
+            <div class="modal-title" style="color: #ff007f;">Dearest Tithi,</div>
             <div class="modal-body">
                 Holding your hand feels like holding my entire world.<br><br>
                 From our engagement on <b>05-09-2025</b> to our wedding on <b>22-03-2026</b>, every single heartbeat of mine belongs to you.<br><br>
@@ -423,7 +459,7 @@
     </div>
 
     <script>
-        // --- Quotes Carousel ---
+        // --- Quotes System ---
         const quotes = [
             `"In all the world, there is no heart for me like yours. In all the world, there is no love for you like mine."`,
             `"Holding your hand is my favorite thing to do in this whole world, Tithi."`,
@@ -444,7 +480,7 @@
             }, 500);
         }, 5000);
 
-        // --- Live Precise Timers ---
+        // --- Live Timers ---
         const engagementDate = new Date("2025-09-05T00:00:00");
         const marriageDate = new Date("2026-03-22T00:00:00");
 
@@ -479,12 +515,22 @@
         setInterval(updateTimers, 1000);
         updateTimers();
 
-        // --- Modal Control ---
+        // --- Modals Controller ---
         const modal = document.getElementById("loveModal");
+        const ammuModal = document.getElementById("ammuModal");
+
         function openModal() { modal.classList.add("active"); playChime(); }
         function closeModal() { modal.classList.remove("active"); }
 
-        // --- Sound Synthesizer (Romantic Soft Chime) ---
+        function openAmmuModal() { ammuModal.classList.add("active"); playChime(); }
+        function closeAmmuModal() { ammuModal.classList.remove("active"); }
+
+        function triggerAmmuSmile(e) {
+            triggerFireworks(e);
+            alert("🌸 A big virtual hug and lots of flowers sent to Ammu! 😊❤️");
+        }
+
+        // --- Audio Chime ---
         function playChime() {
             try {
                 const AudioContext = window.AudioContext || window.webkitAudioContext;
@@ -493,8 +539,8 @@
                 const gain = ctx.createGain();
                 
                 osc.type = 'sine';
-                osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
-                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.8); // A5
+                osc.frequency.setValueAtTime(523.25, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.8);
 
                 gain.gain.setValueAtTime(0.3, ctx.currentTime);
                 gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.8);
@@ -507,7 +553,7 @@
             } catch(e) {}
         }
 
-        // --- Interactive Rainbow Particle Canvas ---
+        // --- Canvas Particle Trail ---
         const canvas = document.getElementById("magicCanvas");
         const ctx = canvas.getContext("2d");
 
@@ -520,8 +566,7 @@
         window.addEventListener("resize", resizeCanvas);
         resizeCanvas();
 
-        const colors = ['#ff0055', '#ff007f', '#00f0ff', '#ffcc00', '#00ff66', '#9b51e0'];
-        const symbols = ['❤️', '💖', '✨', '💕', '💍', '🌸'];
+        const symbols = ['❤️', '💖', '✨', '💕', '💍', '🌸', '💐', '🌺'];
 
         class Particle {
             constructor(x, y, isBurst = false) {
